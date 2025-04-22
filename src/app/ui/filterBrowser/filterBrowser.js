@@ -187,9 +187,18 @@
 					.data("spec", filter));
 			});
 			
-			// 尝试恢复之前选中的值，如果它仍然存在
-			if (this.filters.some(function(f) { return f.path.join(".") === currentValue; })) {
-				fieldSelect.val(currentValue);
+			// 如果过滤后有结果
+			if (this.filters.length > 0) {
+				// 优先尝试保持当前选中值（如果它还存在于过滤结果中）
+				if (this.filters.some(function(f) { return f.path.join(".") === currentValue; })) {
+					fieldSelect.val(currentValue);
+				} else {
+					// 如果之前选中的值不在过滤结果中，则自动选中第一个过滤结果
+					fieldSelect.val(this.filters[0].path.join("."));
+				}
+				
+				// 手动触发change事件，激活选中字段的相关操作
+				fieldSelect.trigger("change");
 			}
 		},
 		
