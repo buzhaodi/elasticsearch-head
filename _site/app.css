@@ -652,6 +652,24 @@ SPAN.uiJsonPretty-boolean { color: purple; }
 	top: 1px;
 }
 
+.uiIndexSelector {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 5px;
+}
+
+.uiIndexSelector-filter {
+    margin-bottom: 5px;
+    padding: 4px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.uiIndexSelector-select select {
+    width: 100%;
+} 
 .uiHeader {
 	padding: 3px 10px;
 }

@@ -97,6 +97,7 @@ exports.srcCss = [
 	'src/app/ui/clusterConnect/clusterConnect.css',
 	'src/app/ui/structuredQuery/structuredQuery.css',
 	'src/app/ui/filterBrowser/filterBrowser.css',
+	'src/app/ui/indexSelector/indexSelector.css',
 	'src/app/ui/header/header.css',
 	'src/app/app.css'
 ];
