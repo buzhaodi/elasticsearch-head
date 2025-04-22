@@ -7,7 +7,8 @@ module.exports = function(grunt) {
 		clean: {
 			_site: {
 				src: ['_site']
-			}
+			},
+			target: ['_site']
 		},
 		concat: {
 			vendorjs: {
@@ -71,7 +72,7 @@ module.exports = function(grunt) {
 				src: [ fileSets.vendorJs, 'src/vendor/i18n/i18n.js', 'src/app/lang/en_strings.js', fileSets.srcJs ],
 				options: {
 					specs: 'src/app/**/*Spec.js',
-					helpers: 'test/spec/*Helper.js',
+					helpers: ['test/spec/*Helper.js'],
 					display: "short",
 					summary: true
 				}

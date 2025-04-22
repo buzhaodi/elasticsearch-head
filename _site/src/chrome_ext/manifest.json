@@ -21,5 +21,4 @@
         "js":["background.js"],
         "run_at": "document_end"
     }]
-  } 
-  
+} 
