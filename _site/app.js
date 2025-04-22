@@ -3988,6 +3988,9 @@
 				{ path: ["_all"], type: "_all", meta: {}}
 			].concat(filters);
 
+			// 存储所有原始过滤器供搜索使用
+			this.allFilters = this.filters.slice(0);
+
 			this._addFilterRow_handler();
 		},
 		
@@ -4086,14 +4089,50 @@
 			}
 		},
 		
+		// 新增：字段过滤函数
+		_filterFieldList_handler: function(jEv) {
+			var input = $(jEv.target);
+			var row = input.closest(".uiFilterBrowser-row");
+			var searchText = input.val().toLowerCase();
+			var fieldSelect = row.find(".field");
+			
+			// 重置过滤器列表
+			this.filters = this.allFilters.slice(0);
+			
+			// 如果有搜索文本，则过滤列表
+			if (searchText) {
+				this.filters = this.allFilters.filter(function(filter) {
+					return filter.path.join(".").toLowerCase().indexOf(searchText) !== -1;
+				});
+			}
+			
+			// 保存当前选中的值
+			var currentValue = fieldSelect.val();
+			
+			// 清空并重新填充选择框
+			fieldSelect.empty();
+			var self = this;
+			this.filters.forEach(function(filter) {
+				fieldSelect.append($("<option></option>")
+					.attr("value", filter.path.join("."))
+					.text(filter.path.join("."))
+					.data("spec", filter));
+			});
+			
+			// 尝试恢复之前选中的值，如果它仍然存在
+			if (this.filters.some(function(f) { return f.path.join(".") === currentValue; })) {
+				fieldSelect.val(currentValue);
+			}
+		},
+		
 		_main_template: function() {
 			return { tag: "DIV", children: [
 				{ tag: "DIV", cls: "uiFilterBrowser-filters" },
 				{ tag: "BUTTON", type: "button", text: i18n.text("General.Search"), onclick: this._search_handler },
 				{ tag: "LABEL", children:
 					i18n.complex("FilterBrowser.OutputType", { tag: "SELECT", cls: "uiFilterBrowser-outputFormat", children: [
-						{ text: i18n.text("Output.Table"), value: "table" },
 						{ text: i18n.text("Output.JSON"), value: "json" },
+						{ text: i18n.text("Output.Table"), value: "table" },
 						{ text: i18n.text("Output.CSV"), value: "csv" }
 					].map(function( o ) { return $.extend({ tag: "OPTION" }, o ); } ) } )
 				},
@@ -4109,6 +4148,7 @@
 		_filter_template: function() {
 			return { tag: "DIV", cls: "uiFilterBrowser-row", children: [
 				{ tag: "SELECT", cls: "bool", children: ["must", "must_not", "should"].map(ut.option_template) },
+				{ tag: "INPUT", type: "text", cls: "fieldFilter", placeholder: i18n.text("FilterBrowser.FilterFields") || "过滤字段...", onkeyup: this._filterFieldList_handler },
 				{ tag: "SELECT", cls: "field", onchange: this._changeQueryField_handler, children: this.filters.map(function(f) {
 					return { tag: "OPTION", data: { spec: f }, value: f.path.join("."), text: f.path.join(".") };
 				})},
